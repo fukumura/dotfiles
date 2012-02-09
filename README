@@ -1,0 +1,10 @@
+You should install vundle.git.
+$ cd ~
+$ mv .vim .vim.bak
+$ mkdir .vim
+$ cd .vim
+$ git clone git://github.com/gmarik/vundle.git
+
+next
+do :BundleInstall
+
