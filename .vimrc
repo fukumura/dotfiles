@@ -1,7 +1,15 @@
 syntax on
-set hidden
+colorscheme pyte
+set ts=4 sw=4 et
+let g:indent_guides_start_level = 1
+let g:indent_guides_guide_size  = 1
+
 set wildmenu
 set nocompatible
+set history=999
+set encoding=utf-8
+set nobackup
+set hidden
 
 " for vundle
 set rtp+=~/.vim/vundle/
@@ -10,7 +18,9 @@ filetype plugin on
 
 Bundle 'Shougo/unite.vim'
 Bundle 'Shougo/neocomplcache'
-Bundle 'Shougo/vimfiler'
+"Bundle 'Shougo/vimfiler'
+Bundle 'Shougo/vimshell'
+Bundle 'sjl/gundo.vim'
 Bundle 'chrismetcalf/vim-yankring'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'tpope/vim-surround'
@@ -18,27 +28,36 @@ Bundle 'thinca/vim-quickrun'
 Bundle 'thinca/vim-ref'
 Bundle 'kana/vim-fakeclip'
 Bundle 'mattn/zencoding-vim'
-Bundle 'JavaScript-syntax'
+Bundle 'mattn/calendar-vim'
 Bundle 'itspriddle/vim-javascript-indent'
 Bundle 'hotchpotch/perldoc-vim'
 Bundle 'petdance/vim-perl'
-Bundle 'cakephp.vim'
 Bundle 'scrooloose/nerdtree'
-Bundle 'NERD_tree_ACK.vim'
+"Bundle 'jimsei/winresizer'
+Bundle 'nathanaelkane/vim-indent-guides'
 
-" /for vundle
+Bundle 'scrooloose/syntastic'
+Bundle 'ShowMarks'
+"Bundle 'css.vim'
+"Bundle 'css_color.vim'
+"Bundle 'javaScriptLint.vim'
+"Bundle 'NERD_tree_ACK.vim'
 
-"" 表示系
+" 表示系
 set number
 set tabstop=4
 set expandtab
 set scrolloff=5
 set showmatch
+set laststatus=2
+set ruler
+set title
 set showcmd
+set showmode
+set statusline=%<%F\ %r%h%w%y%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%4v(ASCII=%03.3b,HEX=%02.2B)\ %l/%L(%P)%m
 set list
 set listchars=tab:>-
-set laststatus=2
-set statusline=%<%F\ %r%h%w%y%{'['.(&fenc!=''?&fenc:&enc).']['.&ff.']'}%=%4v(ASCII=%03.3b,HEX=%02.2B)\ %l/%L(%P)%m
+set wildmode=list:longest
 
 set showtabline=2
 nnoremap <Space>t t
@@ -49,8 +68,19 @@ nnoremap <silent> tk :<C-u>tabclose<LF>
 nnoremap <silent> tn :<C-u>tabnext<LF>
 nnoremap <silent> tp :<C-u>tabprevious<LF>
 
+nnoremap <silent> <C-w><C-n> :vnew<LF>
+
 "status line changes background color when it is insert mode
 let g:hi_insert = 'highlight StatusLine guifg=darkblue guibg=darkyellow gui=none ctermfg=blue ctermbg=yellow cterm=none'
+
+let g:indent_guides_enable_on_vim_startup=1
+let g:indent_guides_color_change_percent = 10
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd ctermbg=black guibg=black ctermbg=1 "インデントの色
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=darkgrey guibg=darkgrey ctermbg=2 "二段階目のインデントの色
+let g:indent_guides_auto_colors = 0
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
+
 
 if has('syntax')
   augroup InsertHook
@@ -82,11 +112,14 @@ endfunction
 
 
 " 保存時に行末の空白を除去する
-autocmd BufWritePre * :%s/\s\+$//ge
+" autocmd BufWritePre * :%s/\s\+$//ge
 " " 保存時にtabをスペースに変換する
-autocmd BufWritePre * :%s/\t/  /ge
+" autocmd BufWritePre * :%s/\t/  /ge
 "compliler
-autocmd FileType perl,cgi :compiler perl
+let g:syntastic_enable_signs=1
+let g:syntastic_auto_loc_list=2
+"autocmd FileType perl,cgi :compiler perl
+"autocmd FileType css :compiler css
 
 "compliler:perl
 au BufReadPost,BufNewFile *.t :setl filetype=perl
@@ -100,6 +133,7 @@ set noincsearch
 set hlsearch
 nmap <Esc><Esc> :nohlsearch<LF><Esc>
 
+imap <C-@> <C-[>
 set backspace=indent,eol,start
 
 
@@ -119,7 +153,7 @@ if has("syntax")
     augroup END
 endif
 
-autocmd FileType php set tags=$HOME/.vim/tags/perl.tags,$HOME/.vim/tags/perl_app.tags
+"autocmd FileType php set tags=$HOME/.vim/tags/perl.tags,$HOME/.vim/tags/perl_app.tags
 nmap ,U :set encoding=utf-8<LF>
 nmap ,E :set encoding=euc-jp<LF>
 map ,S :set encoding=cp932<LF>
@@ -175,7 +209,7 @@ au FileType unite inoremap <silent> <buffer> <expr> <C-l> unite#do_action('vspli
 au FileType unite nnoremap <silent> <buffer> <ESC><ESC> q
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>q
 
-"neocomplcache(http://vim-users.jp/2010/10/hack177/)
+"neocomplcache(http://vim-users.jp/2010/10/hack177/ or http://vim-users.jp/2010/11/hack185/)
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
 " Use neocomplcache.
@@ -189,7 +223,10 @@ let g:neocomplcache_enable_underbar_completion = 1
 let g:neocomplcache_min_syntax_length = 3
 let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 let g:neocomplcache_snippets_dir = $HOME.'/.vim/snippets'
+imap <C-k> <Plug>(neocomplcache_snippets_expand)
+smap <C-k> <Plug>(neocomplcache_snippets_expand)
 
 "vimfilter
 "let g:vimfiler_as_default_explorer = 1
 
+set cursorline
